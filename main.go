@@ -37,7 +37,7 @@ func random(number int) []int {
 func explode(number int) []int {
 	var array []int
 
-	for number > 0 {
+	for number >= 1 {
 		array = append([]int{number % 10}, array...)
 
 		number /= 10
