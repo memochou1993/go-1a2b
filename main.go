@@ -2,7 +2,37 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
+
+func contains(needle int, haystack []int) bool {
+	for _, ele := range haystack {
+		if needle == ele {
+			return true
+		}
+	}
+
+	return false
+}
+
+func random(number int) []int {
+	var numbers []int
+
+	rand.Seed(time.Now().Unix())
+
+	i := 0
+	for i < number {
+		number := rand.Intn(10)
+
+		if number > 0 && !contains(number, numbers) {
+			numbers = append(numbers, number)
+			i++
+		}
+	}
+
+	return numbers
+}
 
 func explode(number int) []int {
 	var array []int
@@ -16,22 +46,18 @@ func explode(number int) []int {
 	return array
 }
 
-func compare(expected int, actual int) (int, int) {
+func compare(expected []int, actual []int) (int, int) {
 	var a int
 	var b int
 
-	expectedArray := explode(expected)
-	actualArray := explode(actual)
-
-	for expectedIndex, expectedValue := range expectedArray {
-		for actualIndex, actualValue := range actualArray {
-			if expectedIndex == actualIndex {
-				if expectedValue == actualValue {
+	for expectedIndex, expectedValue := range expected {
+		for actualIndex, actualValue := range actual {
+			if expectedValue == actualValue {
+				if expectedIndex == actualIndex {
 					a++
 					break
 				}
 				b++
-				break
 			}
 		}
 	}
@@ -40,10 +66,28 @@ func compare(expected int, actual int) (int, int) {
 }
 
 func main() {
-	expected := 4579
-	actual := 7945
+	digits := 4
 
-	a, b := compare(expected, actual)
+	actual := random(digits)
 
-	fmt.Printf("%dA%dB", a, b)
+	var input int
+
+	for {
+		fmt.Scan(&input)
+
+		expected := explode(input)
+
+		if len(expected) != digits {
+			fmt.Println("Invalid input")
+			continue
+		}
+
+		a, b := compare(expected, actual)
+
+		if a == digits {
+			break
+		}
+
+		fmt.Printf("%dA%dB\n", a, b)
+	}
 }
